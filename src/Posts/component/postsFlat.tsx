@@ -10,7 +10,7 @@ type RenderItemProps = {
 };
 
 function PostsFlat() {
-    const { data, loading, fetchData } = useDataFetch();
+    const { loading, fetchData } = useDataFetch();
     const posts = useSelector(
         (state) => state.PostsReducer.posts
     );
