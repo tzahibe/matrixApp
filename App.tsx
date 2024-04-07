@@ -3,12 +3,17 @@ import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 import PostScreen from './src/Posts/screens/postScreen';
+import Navbar from './src/Posts/component/navbar';
+
 
 
 function App(): React.JSX.Element {
-  return (
+   return (
     <Provider store={store}>
       <SafeAreaView>
+        <Navbar
+          title="My Social Media"
+        />
         <PostScreen />
       </SafeAreaView>
     </Provider>
