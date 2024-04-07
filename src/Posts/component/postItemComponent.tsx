@@ -34,6 +34,7 @@ const PostItemComponent: React.FC<PostItemComponentProps> = ({ item }) => {
 
 
     const handleCommentSubmit = (item: PostItem) => {
+        if (newComment == "" || newComment == null) return;
         console.log('Comment submitted:', newComment);
         const newItem = { ...item } as PostItem;
         const comment = { author: "tzahi_b", text: newComment } as Comment
