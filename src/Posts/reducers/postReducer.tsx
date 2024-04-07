@@ -65,7 +65,6 @@ function PostsReducer(state = initialState, action: any) {
         };
       }
 
-      return state; // Ensure to return state in the default case
     }
 
     default:
