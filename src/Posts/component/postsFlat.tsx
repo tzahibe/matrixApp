@@ -3,14 +3,17 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import { useDataFetch } from '../hooks/useDataFetch';
 import { PostItem } from '../../Types';
 import PostItemComponent from './postItemComponent';
+import { useSelector } from 'react-redux';
 
 type RenderItemProps = {
     item: PostItem;
 };
 
 function PostsFlat() {
-
     const { data, loading, fetchData } = useDataFetch();
+    const posts = useSelector(
+        (state) => state.PostsReducer.posts
+    );
 
     const renderFooter = () => {
         return loading ? (
@@ -28,16 +31,19 @@ function PostsFlat() {
 
 
     return (
-        <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
-            onEndReached={fetchData}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={renderFooter}
-            keyExtractor={(item, index) => String(index)}
+        <>
+            <FlatList
+                data={posts}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+                onEndReached={fetchData}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={renderFooter}
+                keyExtractor={(item, index) => String(index)}
 
-        />
+            />
+        </>
+
     );
 };
 

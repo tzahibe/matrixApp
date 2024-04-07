@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
+import PostsReducer from './Posts/reducers/postReducer';
 
-import rootReducer from './Posts/reducers/rootReducer';
 
-export const store = configureStore({ reducer: rootReducer });
+export const store = configureStore({ reducer: PostsReducer });
 // The store now has redux-thunk added and the Redux DevTools 

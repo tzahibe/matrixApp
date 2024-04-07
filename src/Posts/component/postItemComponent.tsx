@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { PostItem } from "../../Types";
+import { Comment, PostItem } from "../../Types";
 import { Icon } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
+import { addComment, addLikes, removeLikes } from '../actions/actionTypes';
 
 
 type PostItemComponentProps = {
@@ -12,19 +14,33 @@ type PostItemComponentProps = {
 const PostItemComponent: React.FC<PostItemComponentProps> = ({ item }) => {
     const [newComment, setNewComment] = useState('');
     const [isLiked, setIsLiked] = useState(false);
+    const dispatch = useDispatch();
+    const posts = useSelector((state) => state?.PostsReducer?.posts);
+    console.log({ posts });
 
-    const handleLikePress = () => {
+    const handleLikePress = (id: number) => {
         console.log('Like button clicked');
+        //redux
         setIsLiked(!isLiked);
+
+        if (isLiked) {
+            dispatch(removeLikes(id));
+        }
+        else {
+            dispatch(addLikes(id));
+
+        }
     };
 
 
-    const handleCommentSubmit = () => {
-        // Your comment submit logic goes here
+    const handleCommentSubmit = (item: PostItem) => {
         console.log('Comment submitted:', newComment);
-        // You may want to add logic here to actually submit the comment to your backend or update the state accordingly
-        // For simplicity, I'm just logging the new comment for now
-        setNewComment(''); // Clear the input field after submitting
+        const newItem = { ...item } as PostItem;
+        const comment = { author: "tzahi_b", text: newComment } as Comment
+        newItem.comments = [...item.comments, comment];
+        //redux
+        dispatch(addComment(newItem));
+        setNewComment('');
     };
 
     const renderComments = () => {
@@ -37,40 +53,43 @@ const PostItemComponent: React.FC<PostItemComponentProps> = ({ item }) => {
     };
 
     return (
-        <View style={styles.container} key={item.id}>
-            <View style={styles.header}>
-                <Text style={styles.author}>{item.author}</Text>
-                <Text style={styles.title}>{item.title}</Text>
-            </View>
-            <View style={styles.body}>
-                <Text>{item.bodyText}</Text>
-            </View>
-            <TouchableOpacity onPress={handleLikePress} style={styles.likeStyle}>
-                <Icon
-                    name={isLiked ? 'heart' : 'heart-o'}
-                    type='font-awesome'
-                    color='#3b5998'
-                    size={20}
-                />
-                <Text style={styles.likeText}>{item.likes} Likes</Text>
-            </TouchableOpacity>
-            <View style={styles.commentsContainer}>
-                <Text style={styles.commentsHeader}>Comments</Text>
-                {renderComments()}
-                {/* Input field for new comment */}
-                <View style={styles.commentInputContainer}>
-                    <TextInput
-                        style={styles.commentInput}
-                        placeholder="Add a comment..."
-                        value={newComment}
-                        onChangeText={setNewComment}
+        <>
+            <View style={styles.container} key={item.id}>
+                <View style={styles.header}>
+                    <Text style={styles.author}>{item.author}</Text>
+                    <Text style={styles.title}>{item.title}</Text>
+                </View>
+                <View style={styles.body}>
+                    <Text>{item.bodyText}</Text>
+                </View>
+                <TouchableOpacity onPress={() => handleLikePress(item.id)} style={styles.likeStyle}>
+                    <Icon
+                        name={isLiked ? 'heart' : 'heart-o'}
+                        type='font-awesome'
+                        color='#3b5998'
+                        size={20}
                     />
-                    <TouchableOpacity onPress={handleCommentSubmit} style={styles.commentButton}>
-                        <Text style={styles.commentButtonText}>Post</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.likeText}>{item.likes} Likes</Text>
+                </TouchableOpacity>
+                <View style={styles.commentsContainer}>
+                    <Text style={styles.commentsHeader}>Comments</Text>
+                    {renderComments()}
+                    {/* Input field for new comment */}
+                    <View style={styles.commentInputContainer}>
+                        <TextInput
+                            style={styles.commentInput}
+                            placeholder="Add a comment..."
+                            value={newComment}
+                            onChangeText={setNewComment}
+                        />
+                        <TouchableOpacity onPress={() => handleCommentSubmit(item)} style={styles.commentButton}>
+                            <Text style={styles.commentButtonText}>Post</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
+        </>
+
     );
 };
 
