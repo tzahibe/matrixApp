@@ -57,7 +57,7 @@ function PostsReducer(state = initialState, action: any) {
 
       if (postIndex !== -1) {
         const updatedPosts: PostItem[] = [...state.posts];
-        updatedPosts[postIndex] = { ...updatedPosts[postIndex], comments: item.comments };
+        updatedPosts[postIndex] = { ...item };
 
         return {
           ...state,
