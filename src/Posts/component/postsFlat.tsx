@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDataFetch } from '../hooks/useDataFetch';
 import { PostItem } from '../../Types';
@@ -11,6 +11,7 @@ type RenderItemProps = {
 
 function PostsFlat() {
     const { loading, fetchData } = useDataFetch();
+    const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
     const posts = useSelector(
         (state) => state.PostsReducer.posts
     );
@@ -36,10 +37,18 @@ function PostsFlat() {
                 data={posts}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
-                onEndReached={fetchData}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={renderFooter}
                 keyExtractor={(item, index) => String(index)}
+                onEndReachedThreshold={0.1}
+                onMomentumScrollBegin={() => { setOnEndReachedCalledDuringMomentum(false); }}
+                onEndReached={() => {
+                    if (!onEndReachedCalledDuringMomentum) {
+                        fetchData();    // LOAD MORE DATA
+                        setOnEndReachedCalledDuringMomentum(true);
+                    }
+                }
+                }
 
             />
         </>
