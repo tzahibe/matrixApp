@@ -37,7 +37,6 @@ function PostsFlat() {
                 data={posts}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
-                onEndReachedThreshold={0.5}
                 ListFooterComponent={renderFooter}
                 keyExtractor={(item, index) => String(index)}
                 onEndReachedThreshold={0.1}
